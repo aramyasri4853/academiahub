@@ -24,11 +24,11 @@ mongoose.connect(process.env.MONGODB_URI)
   });
 
 // API Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/attendance', require('./routes/attendance'));
-app.use('/api/marks', require('./routes/marks'));
-app.use('/api/schedule', require('./routes/schedule'));
-app.use('/api/seed', require('./routes/seed'));
+app.use('/api/auth', require('./auth'));
+app.use('/api/attendance', require('./attendance'));
+app.use('/api/marks', require('./marks'));
+app.use('/api/schedule', require('./schedule'));
+app.use('/api/seed', require('./seed'));
 
 // Fallback to route all front-end requests to the landing/login page
 app.get('*', (req, res) => {
