@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Dashboard - AcademiaHub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Ambient background glow -->
+  <div class="glow-blob glow-blob-1"></div>
+  <div class="glow-blob glow-blob-2"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        AH <span>Portal</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <button class="active" onclick="switchSection('overview', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Overview</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('attendance', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>Mark Attendance</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('grades', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <span>Assign Grades</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('schedule', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Class Timetable</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar" id="nav-avatar">F</div>
+          <div class="user-details">
+            <div class="user-name" id="nav-user-name">Loading...</div>
+            <div class="user-role" id="nav-user-role">Faculty Member</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Section: Overview -->
+      <section id="overview-section" class="dashboard-section active">
+        <div class="content-header">
+          <div>
+            <h2 id="greeting-title">Welcome back, Professor!</h2>
+            <p id="faculty-meta-subtitle">Manage class schedules, update attendance records, and assign student marks.</p>
+          </div>
+        </div>
+
+        <!-- Dashboard Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+              <div class="stat-label">Scheduled Classes</div>
+              <div class="stat-value" id="stat-class-count">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-content">
+              <div class="stat-label">Faculty ID</div>
+              <div class="stat-value" id="stat-faculty-id">--</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-content">
+              <div class="stat-label">Department</div>
+              <div class="stat-value" id="stat-department" style="font-size: 18px;">Computer Science</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout-grid">
+          <!-- Calendar Timetable Summary -->
+          <div class="panel">
+            <h3 class="panel-title">Your Timetable Schedule <span>Today & Upcoming</span></h3>
+            <div id="overview-schedule-list" class="schedule-list">
+              <p style="color: var(--text-muted); font-size: 14px;">No class schedules populated.</p>
+            </div>
+          </div>
+
+          <!-- Shortcuts Panel -->
+          <div class="panel">
+            <h3 class="panel-title">Quick Tasks</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <button class="btn-action" style="justify-content: center;" onclick="document.querySelector('[onclick*=\'attendance\']').click()">
+                📝 Mark Roll Call Attendance
+              </button>
+              <button class="btn-action" style="justify-content: center;" onclick="document.querySelector('[onclick*=\'grades\']').click()">
+                ✍️ Assign Exam Marks
+              </button>
+              <button class="btn-action" style="justify-content: center;" onclick="document.querySelector('[onclick*=\'schedule\']').click()">
+                ⏰ Add Class Timetable Schedule
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Attendance Manager -->
+      <section id="attendance-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Class Attendance</h2>
+            <p>Select a class and subject to load the students list and submit attendance.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">1. Search Filters</h3>
+          <form id="attendance-filter-form">
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label" for="att-class">Class Section</label>
+                <select id="att-class" class="form-select" required>
+                  <option value="CSE-1">CSE-1</option>
+                  <option value="CSE-2">CSE-2</option>
+                  <option value="CSE-3">CSE-3</option>
+                  <option value="ECE-1">ECE-1</option>
+                  <option value="CIVIL-1">CIVIL-1</option>
+                  <option value="MECH-1">MECH-1</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="att-subject">Subject</label>
+                <input type="text" id="att-subject" class="form-input" style="padding-left: 16px;" placeholder="e.g. Advanced Database Systems" required>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label" for="att-date">Date</label>
+                <input type="date" id="att-date" class="form-input" style="padding-left: 16px;" required>
+              </div>
+              <div class="form-group" style="display: flex; align-items: flex-end;">
+                <button type="submit" class="btn-primary" style="height: 48px;">Load Student List</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel" id="attendance-roll-panel" style="display: none;">
+          <h3 class="panel-title">2. Students Roll Call <span id="attendance-roll-title">CS-A | Web Tech</span></h3>
+          <div class="alert alert-danger" id="att-alert"></div>
+          <div class="alert alert-success" id="att-success"></div>
+          
+          <div class="table-container" style="margin-bottom: 24px;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Status Toggle (Absent / Present)</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-students-tbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <button id="btn-save-attendance" class="btn-submit">
+            Save Attendance Records
+          </button>
+        </div>
+      </section>
+
+      <!-- Section: Assign Grades -->
+      <section id="grades-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Gradebook Portal</h2>
+            <p>Input marks and grading assessment results directly for academic transcripts.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">1. Assessment Parameters</h3>
+          <form id="marks-filter-form">
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label" for="marks-class">Class Section</label>
+                <select id="marks-class" class="form-select" required>
+                  <option value="CSE-1">CSE-1</option>
+                  <option value="CSE-2">CSE-2</option>
+                  <option value="CSE-3">CSE-3</option>
+                  <option value="ECE-1">ECE-1</option>
+                  <option value="CIVIL-1">CIVIL-1</option>
+                  <option value="MECH-1">MECH-1</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="marks-subject">Subject</label>
+                <input type="text" id="marks-subject" class="form-input" style="padding-left: 16px;" placeholder="e.g. Advanced Database Systems" required>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label" for="marks-assessment">Assessment Name</label>
+                <input type="text" id="marks-assessment" class="form-input" style="padding-left: 16px;" placeholder="e.g. Midterm Exam" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="marks-max">Max Marks Allowed</label>
+                <input type="number" id="marks-max" class="form-input" style="padding-left: 16px;" placeholder="e.g. 100" min="1" required>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary" style="max-width: 250px;">Fetch Class List</button>
+          </form>
+        </div>
+
+        <div class="panel" id="marks-input-panel" style="display: none;">
+          <h3 class="panel-title">2. Grade Sheets <span id="marks-roll-title">CS-A | Midterm Exam</span></h3>
+          <div class="alert alert-danger" id="marks-alert"></div>
+          <div class="alert alert-success" id="marks-success"></div>
+
+          <div class="table-container" style="margin-bottom: 24px;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Marks Obtained (Max: <span id="marks-label-max">100</span>)</th>
+                </tr>
+              </thead>
+              <tbody id="marks-students-tbody">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+
+          <button id="btn-save-marks" class="btn-submit">
+            Publish Grade Records
+          </button>
+        </div>
+      </section>
+
+      <!-- Section: Schedule Classes -->
+      <section id="schedule-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Class Timetable Timings</h2>
+            <p>Prepare lectures schedules, assignments meetings, and upcoming exams timetables.</p>
+          </div>
+        </div>
+
+        <div class="layout-grid">
+          <!-- Timetable Scheduler Form -->
+          <div class="panel">
+            <h3 class="panel-title">Schedule New Class</h3>
+            <div class="alert alert-danger" id="sched-alert"></div>
+            <div class="alert alert-success" id="sched-success"></div>
+
+            <form id="schedule-creator-form">
+              <div class="form-group">
+                <label class="form-label" for="sched-subject">Subject</label>
+                <input type="text" id="sched-subject" class="form-input" style="padding-left: 16px;" placeholder="e.g. Advanced Database Systems" required>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="sched-class">Target Class Section</label>
+                  <select id="sched-class" class="form-select" required>
+                    <option value="CSE-1">CSE-1</option>
+                    <option value="CSE-2">CSE-2</option>
+                    <option value="CSE-3">CSE-3</option>
+                    <option value="ECE-1">ECE-1</option>
+                    <option value="CIVIL-1">CIVIL-1</option>
+                    <option value="MECH-1">MECH-1</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="sched-room">Room / Lecture Hall</label>
+                  <input type="text" id="sched-room" class="form-input" style="padding-left: 16px;" placeholder="e.g. Lab 402" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="sched-date">Date</label>
+                <input type="date" id="sched-date" class="form-input" style="padding-left: 16px;" required>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="sched-start">Start Time</label>
+                  <input type="time" id="sched-start" class="form-input" style="padding-left: 16px;" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="sched-end">End Time</label>
+                  <input type="time" id="sched-end" class="form-input" style="padding-left: 16px;" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="sched-desc">Lecture Description (Optional)</label>
+                <input type="text" id="sched-desc" class="form-input" style="padding-left: 16px;" placeholder="e.g. Discussing MongoDB index patterns">
+              </div>
+              <button type="submit" class="btn-submit" style="width: 100%;">Create Class Schedule</button>
+            </form>
+          </div>
+
+          <!-- Existing Schedules by Faculty member -->
+          <div class="panel">
+            <h3 class="panel-title">Active Timetables Created</h3>
+            <div id="faculty-timetable-list" class="schedule-list">
+              <p style="color: var(--text-muted); font-size: 14px;">Loading timetable events...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/faculty.js"></script>
+</body>
+</html>

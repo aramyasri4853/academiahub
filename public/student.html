@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - AcademiaHub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Ambient background glow -->
+  <div class="glow-blob glow-blob-1"></div>
+  <div class="glow-blob glow-blob-2"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        AH <span>Portal</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <button class="active" onclick="switchSection('overview', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Overview</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('attendance', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Attendance</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('grades', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>Grades & Marks</span>
+          </button>
+        </li>
+        <li class="menu-item">
+          <button onclick="switchSection('schedule', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Class Schedules</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-user">
+        <div class="user-info">
+          <div class="user-avatar" id="nav-avatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="nav-user-name">Loading...</div>
+            <div class="user-role" id="nav-user-role">Student</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Section: Overview -->
+      <section id="overview-section" class="dashboard-section active">
+        <div class="content-header">
+          <div>
+            <h2 id="greeting-title">Welcome back, Student!</h2>
+            <p id="student-meta-subtitle">Manage your classes, check your grades, and review attendance.</p>
+          </div>
+        </div>
+
+        <!-- Dashboard Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <div class="stat-label">Attendance Rate</div>
+              <div class="stat-value" id="stat-attendance-rate">--%</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-content">
+              <div class="stat-label">Average Mark</div>
+              <div class="stat-value" id="stat-gpa">--%</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🕒</div>
+            <div class="stat-content">
+              <div class="stat-label">Next Class Today</div>
+              <div class="stat-value" id="stat-next-class" style="font-size: 16px;">No classes today</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-content">
+              <div class="stat-label">Academic Details</div>
+              <div class="stat-value" id="stat-class-info" style="font-size: 18px;">CS-A</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout-grid">
+          <!-- Upcoming Classes Panel -->
+          <div class="panel">
+            <h3 class="panel-title">Your Scheduled Classes <span>Upcoming</span></h3>
+            <div id="overview-schedule-list" class="schedule-list">
+              <!-- Dynamically populated -->
+              <p style="color: var(--text-muted); font-size: 14px;">Loading upcoming schedules...</p>
+            </div>
+          </div>
+
+          <!-- Attendance Progress Panel -->
+          <div class="panel">
+            <h3 class="panel-title">Subject Attendance <span>Breakdown</span></h3>
+            <div id="overview-attendance-progress" style="display: flex; flex-direction: column; gap: 16px;">
+              <!-- Dynamically populated -->
+              <p style="color: var(--text-muted); font-size: 14px;">Loading attendance statistics...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Attendance -->
+      <section id="attendance-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Attendance History</h2>
+            <p>Full breakdown of your class attendance markings.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">Subject Summaries</h3>
+          <div id="attendance-subject-grid" class="stats-grid" style="margin-bottom: 28px;">
+            <!-- Dynamically populated summary cards -->
+          </div>
+
+          <h3 class="panel-title" style="margin-top: 28px;">Individual Record Logs</h3>
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Instructor</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-records-tbody">
+                <!-- Dynamically populated rows -->
+                <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Loading attendance logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Grades -->
+      <section id="grades-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Academic Achievements</h2>
+            <p>Access your exam marks, assignments, and test grades.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">Gradebook</h3>
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Assessment Name</th>
+                  <th>Marks Obtained</th>
+                  <th>Max Marks</th>
+                  <th>Percentage</th>
+                  <th>Instructor</th>
+                </tr>
+              </thead>
+              <tbody id="grades-records-tbody">
+                <!-- Dynamically populated rows -->
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Loading academic marks...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Schedule -->
+      <section id="schedule-section" class="dashboard-section">
+        <div class="content-header">
+          <div>
+            <h2>Weekly Class Schedule</h2>
+            <p>Timetable of upcoming classes, labs, and workshops scheduled for your class.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">Your Timetable</h3>
+          <div id="schedule-timetable-list" class="schedule-list">
+            <!-- Dynamically populated schedule list -->
+            <p style="color: var(--text-muted); font-size: 14px;">Loading timetable...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/student.js"></script>
+</body>
+</html>
